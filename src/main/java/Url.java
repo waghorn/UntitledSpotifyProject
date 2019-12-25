@@ -9,28 +9,41 @@ class Url {
         return URL;
     }
 
-    //A builder is probably a bit overkill here but when the URL gets more complicated bit could be useful
+    //A builder is probably a bit overkill here but when the URL gets more complicated, it could be useful.
+    //How I build the strings could be better
     public static class UrlBuilder {
+        private String url;
         private final String BASE_URL = "https://api.spotify.com";
         private final String API_VERSION = "/v1";
 
-        //TODO Add more components when API is understood
-        private String URL;
-        private String searchTerms;
+        private final String ALBUM = "/albums";
+        private final String SEARCH = "/search?";
 
-        public UrlBuilder() {
-            this.URL = BASE_URL + API_VERSION;
+        UrlBuilder() {
+            this.url = BASE_URL + API_VERSION;
         }
 
-        public UrlBuilder addSearchTerm(String searchTerms) {
-            //TODO consider making this a list for more complex searches?
-            this.searchTerms = searchTerms;
+        //General Search
+        UrlBuilder search(String queryString) {
+            url = url + SEARCH + queryString;
             return this;
         }
 
-        public Url build() {
+        //Album Related Methods
+        UrlBuilder getAlbum(String albumId, boolean tracks) {
+            url = url + ALBUM  + "/" + albumId;
+            if (tracks) url = url + "/tracks";
+            return this;
+        }
+
+        UrlBuilder getAlbums(String albumIds) {
+            url = url + ALBUM  + "/?ids=" + albumIds;
+            return this;
+        }
+
+        Url build() {
             Url url = new Url();
-            url.URL = URL;
+            url.URL = this.url;
             return url;
         }
     }
